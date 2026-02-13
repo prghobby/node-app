@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'node:18'
-            args '-u root'  // Run as root to allow apt-get
+            args '-u root --network host'  // Run as root to allow apt-get
         }
     }
     stages {
