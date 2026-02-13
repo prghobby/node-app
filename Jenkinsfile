@@ -20,11 +20,16 @@ pipeline {
         }
 
 stage('SonarQube Analysis') {
+    agent {
+        docker {
+            image 'sonarsource/sonar-scanner-cli:latest'
+            args '-u root'
+        }
+    }
     steps {
         withSonarQubeEnv('sonarqube') {
             sh '''
-            npm install sonar-scanner --save-dev
-            npx sonar-scanner \
+            sonar-scanner \
               -Dsonar.projectKey=node-app \
               -Dsonar.sources=. \
               -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
