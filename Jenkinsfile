@@ -20,16 +20,14 @@ pipeline {
         }
 
 stage('SonarQube Analysis') {
-    agent {
-        docker {
-            image 'sonarsource/sonar-scanner-cli:latest'
-            args '-u root'
-        }
-    }
     steps {
         withSonarQubeEnv('sonarqube') {
             sh '''
-            sonar-scanner \
+            curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+            apt-get update && apt-get install -y unzip
+            unzip sonar-scanner.zip
+            chmod +x sonar-scanner-*/bin/sonar-scanner
+            sonar-scanner-*/bin/sonar-scanner \
               -Dsonar.projectKey=node-app \
               -Dsonar.sources=. \
               -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
