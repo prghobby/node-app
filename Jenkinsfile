@@ -5,9 +5,6 @@ pipeline {
         }
     }
 
-    environment {
-        SONARQUBE = credentials('sqp_a739f9cc11320b5f2ce94cfc3b03a457ff0187fa')
-    }
 
     stages {
         stage('Install Dependencies') {
