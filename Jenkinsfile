@@ -20,9 +20,11 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh '''
+                        # Clean up any existing scanner directory
+                        rm -rf sonar-scanner-*
                         curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
                         apt-get update && apt-get install -y unzip
-                        unzip -q sonar-scanner.zip
+                        unzip -o -q sonar-scanner.zip  # -o flag forces overwrite
                         chmod +x sonar-scanner-*/bin/sonar-scanner
                         sonar-scanner-*/bin/sonar-scanner \
                           -Dsonar.projectKey=node-app \
