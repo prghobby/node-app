@@ -5,17 +5,26 @@ pipeline {
             args '-u root --network host'
         }
     }
+
+    environment {
+        // Optional: use Jenkins credentials if needed later
+        // SONAR_TOKEN = credentials('sonar-token')
+    }
+
     stages {
+
         stage('Install Dependencies') {
             steps {
                 sh 'npm install'
             }
         }
+
         stage('Run Tests') {
             steps {
                 sh 'npm test'
             }
         }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
@@ -25,6 +34,7 @@ pipeline {
                         apt-get update && apt-get install -y unzip
                         unzip -o -q sonar-scanner.zip
                         chmod +x sonar-scanner-*/bin/sonar-scanner
+
                         sonar-scanner-*/bin/sonar-scanner \
                           -Dsonar.projectKey=node-app \
                           -Dsonar.sources=. \
@@ -33,7 +43,7 @@ pipeline {
                 }
             }
         }
-        // Temporarily commented out until SonarQube server URL is fixed
+
         /*
         stage('Quality Gate') {
             steps {
@@ -43,5 +53,15 @@ pipeline {
             }
         }
         */
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image node-app:${BUILD_NUMBER}"
+                    dockerImage = docker.build("node-app:${BUILD_NUMBER}")
+                }
+            }
+        }
     }
 }
+
