@@ -6,10 +6,6 @@ pipeline {
         }
     }
 
-    environment {
-        // Optional: use Jenkins credentials if needed later
-        // SONAR_TOKEN = credentials('sonar-token')
-    }
 
     stages {
 
