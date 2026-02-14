@@ -179,7 +179,16 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            echo 'Cleaning up...'
-            sh 'docker system prune -
+post {
+    always {
+        echo 'Cleaning up...'
+        sh 'docker system prune -f || true'
+    }
+    success {
+        echo "✅ Build ${BUILD_NUMBER} completed successfully!"
+        echo "Docker image: node-app:${BUILD_NUMBER}"
+    }
+    failure {
+        echo "❌ Build ${BUILD_NUMBER} failed!"
+    }
+}
